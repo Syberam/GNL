@@ -6,7 +6,7 @@
 /*   By: sbonnefo <sbonnefo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/13 18:30:37 by sbonnefo          #+#    #+#             */
-/*   Updated: 2017/01/17 16:22:17 by sbonnefo         ###   ########.fr       */
+/*   Updated: 2017/01/19 17:02:07 by sbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ int				main(int argc, char **argv)
 	int			fd;
 	int			n;
 	char		*line;
+	int			i;
 
+	i = 0;
 	n = 1;
 	if (argc != 2)
 	{
@@ -32,9 +34,17 @@ int				main(int argc, char **argv)
 			n = get_next_line(fd, &line);
 			if (n == 1)
 			{
+				i++;
+				ft_putstr("\033[33mline nº");
+				ft_putnbr(i);
+				ft_putstr(" :\t\033[0m");
 				ft_putstr(line);
 				ft_putchar('\n');
 			}
+			else if (n == 0)
+				ft_putstr("End Of File");
+			else
+				ft_putstr("Error");
 		}
 	}
 	return (0);
