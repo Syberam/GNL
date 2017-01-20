@@ -6,54 +6,76 @@
 /*   By: sbonnefo <sbonnefo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/13 18:25:02 by sbonnefo          #+#    #+#             */
-/*   Updated: 2017/01/19 19:33:31 by sbonnefo         ###   ########.fr       */
+/*   Updated: 2017/01/20 17:21:30 by sbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-/*
-void				ft_fill_line(char **line, char *tmp)
+
+void	*ft_stock_line(char **line, char *tmp)
 {
-	if (!*line)
-		*line = ft_strsub(tmp, 0, ft_strlen(tmp)
-			- ft_strlen(ft_strchr(tmp, '\n')));
+	int		ibn;
+
+	if (!(ft_strchr(tmp, '\n')))
+		ibn = 0;
 	else
-		*line = ft_strjoin(*line,
-			ft_strsub(tmp, 0, (ft_strlen(tmp)
-				- ft_strlen(ft_strchr(tmp, '\n')))));
-	tmp = ft_strchr(tmp, '\n');
-	if (tmp)
-		tmp = tmp + 1;
+		ibn = ft_strlen(ft_strchr(tmp, '\n'));
+			if (*line == NULL)
+			{
+				*line = ft_strsub(tmp, 0, ft_strlen(tmp) - ibn + 1);
+			}
+			else
+			{
+				*line = ft_strjoin(*line, ft_strsub(tmp, 0, (ft_strlen(tmp)
+						- ibn + 1)));
+			}
+			return (*line);
 }
-*/
-int					get_next_line(const int fd, char **line)
+
+static int			ft_gnl(const int fd, char **line, int nbread)
 {
 	char			buff[BUFF_SIZE + 1];
 	static char		*tmp;
-	int				nbread;
 
-	*line = NULL;
-	nbread = 1;
-	if (tmp)
+	while ((*line == NULL || ft_strchr(*line, '\n') == NULL) && nbread > 0)
 	{
-		*line = ft_strsub(tmp, 0, ft_strlen(tmp) - ft_strlen(ft_strchr(tmp, '\n')));
-	}
-	else
-	{
-		while (nbread > 0)
+		if (tmp != NULL)
 		{
-			if (!(nbread = read(fd, buff, BUFF_SIZE)))
-				return (1);
-			buff[BUFF_SIZE] = 0;
-			if (!tmp)
+			if (ft_strchr(tmp, '\n') == NULL )
+			{
+				if ((nbread = read(fd, buff, BUFF_SIZE)) < 1)
+					return (nbread);
+				buff[nbread] = 0;
 				tmp = buff;
+			}
 			else
-				tmp = ft_strjoin(tmp, buff);
+			{	
+				if (ft_strchr(tmp, '\n'))
+					tmp = ft_strchr(tmp, '\n') + 1;
+			}
+				*line = ft_stock_line(&*line, tmp);
 		}
-		return (get_next_line(fd, &*line));
+		else
+		{
+			if ((nbread = read(fd, buff, BUFF_SIZE)) < 1)
+					return (nbread);
+			buff[nbread] = 0;
+			tmp = buff;
+			*line = ft_stock_line(&*line, tmp);
+		}
 	}
+	*line = ft_strsub(*line, 0, (ft_strlen(*line)
+				- ft_strlen(ft_strchr(*line, '\n'))));
 	return (1);
 }
 
-tout stocker dans tmp, mais la partie envoyee dans line, decaler au second tour.
-utiliser ft_strncmp(line, tmp, ft_strlen(line));
+int					get_next_line(const int fd, char **line)
+{
+	if (!*line || !fd || BUFF_SIZE < 1)
+		return (-1);
+	*line = NULL;
+	/*ft_putstr("start\n");
+	ft_putstr(ft_strchr(*line, '\n'));
+	ft_putstr("end\n");
+	*/return (ft_gnl(fd, &*line, BUFF_SIZE));
+}
