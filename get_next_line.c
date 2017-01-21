@@ -6,7 +6,7 @@
 /*   By: sbonnefo <sbonnefo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/13 18:25:02 by sbonnefo          #+#    #+#             */
-/*   Updated: 2017/01/21 19:01:35 by sbonnefo         ###   ########.fr       */
+/*   Updated: 2017/01/21 19:55:42 by sbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,11 @@ static int			ft_gnl(const int fd, char **line, int nbread, char **tmp)
 {
 	char			buff[BUFF_SIZE + 1];
 
-	while ((*line == NULL || ft_strchr(*line, '\n') == NULL) /*&& nbread > 0*/)
+	while ((*line == NULL || ft_strchr(*line, '\n') == NULL) && nbread > 0)
 	{
 		if (nbread < BUFF_SIZE)
 			return (1);
-/*		ft_putstr("\033[36mline en entree de boucle : \033[0m");
-		if (*line != NULL)
-			ft_putstr(*line);
-		ft_putchar('\n');
-*/		if (*tmp != NULL)
+		if (*tmp != NULL)
 		{
 			if (ft_strchr(*tmp, '\n') == NULL)
 			{
@@ -59,24 +55,10 @@ static int			ft_gnl(const int fd, char **line, int nbread, char **tmp)
 			*tmp = ft_strdup(buff);
 		}
 		*line = ft_stock_line(&*line, *tmp);
-
-		/*ft_putstr("line en fin de boucle : ");
-		ft_putstr(*line);
-		ft_putchar('\n');
-*/
 	}
-/*	ft_putstr("line en sortie de boucle : ");
-	ft_putstr(*line);
-	ft_putchar('\n');
-*/	if (ft_strchr(*line, '\n') != NULL)
+	if (ft_strchr(*line, '\n') != NULL)
 		*line = ft_strsub(*line, 0, (ft_strlen(*line)
 			- ft_strlen(ft_strchr(*line, '\n'))));
-/*	ft_putstr("line apres suppr de \\n : ");
-	ft_putstr(*line);
-	ft_putchar('\n');
-*/	
-
-
 	return (1);
 }
 
@@ -84,7 +66,7 @@ int					get_next_line(const int fd, char **line)
 {
 	static char		*tmp;
 
-	if (!*line || !fd || BUFF_SIZE < 1)
+	if (!line || !fd || fd < 0 || BUFF_SIZE < 1)
 		return (-1);
 	*line = NULL;
 	return (ft_gnl(fd, &*line, BUFF_SIZE, &tmp));
