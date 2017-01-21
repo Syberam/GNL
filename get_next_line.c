@@ -6,7 +6,7 @@
 /*   By: sbonnefo <sbonnefo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/13 18:25:02 by sbonnefo          #+#    #+#             */
-/*   Updated: 2017/01/21 18:06:05 by sbonnefo         ###   ########.fr       */
+/*   Updated: 2017/01/21 18:56:14 by sbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ static int			ft_gnl(const int fd, char **line, int nbread, char **tmp)
 			*tmp = ft_strdup(buff);
 		}
 		*line = ft_stock_line(&*line, *tmp);
+		if (nbread < BUFF_SIZE)
+			return (1);
 		/*ft_putstr("line en fin de boucle : ");
 		ft_putstr(*line);
 		ft_putchar('\n');
