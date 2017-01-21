@@ -6,7 +6,7 @@
 /*   By: sbonnefo <sbonnefo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/13 18:25:02 by sbonnefo          #+#    #+#             */
-/*   Updated: 2017/01/21 18:56:14 by sbonnefo         ###   ########.fr       */
+/*   Updated: 2017/01/21 19:01:35 by sbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static int			ft_gnl(const int fd, char **line, int nbread, char **tmp)
 
 	while ((*line == NULL || ft_strchr(*line, '\n') == NULL) /*&& nbread > 0*/)
 	{
+		if (nbread < BUFF_SIZE)
+			return (1);
 /*		ft_putstr("\033[36mline en entree de boucle : \033[0m");
 		if (*line != NULL)
 			ft_putstr(*line);
@@ -57,8 +59,7 @@ static int			ft_gnl(const int fd, char **line, int nbread, char **tmp)
 			*tmp = ft_strdup(buff);
 		}
 		*line = ft_stock_line(&*line, *tmp);
-		if (nbread < BUFF_SIZE)
-			return (1);
+
 		/*ft_putstr("line en fin de boucle : ");
 		ft_putstr(*line);
 		ft_putchar('\n');
